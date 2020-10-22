@@ -30,7 +30,8 @@ Node* newNode(int key)
     node->key = key;  
     node->left = NULL;  
     node->right = NULL;  
-    node->height = 1;  
+    node->height = 1; // new node is initially 
+                      // added at leaf  
     return(node);  
 }  
 
@@ -38,12 +39,18 @@ Node *rightRotate(Node *y)
 {  
     Node *x = y->left;  
     Node *T2 = x->right;  
-    
+  
+    // Perform rotation  
     x->right = y;  
     y->left = T2;  
-   
-    y->height = max(height(y->left), height(y->right)) + 1;  
-    x->height = max(height(x->left), height(x->right)) + 1;  
+  
+    // Update heights  
+    y->height = max(height(y->left), 
+                    height(y->right)) + 1;  
+    x->height = max(height(x->left), 
+                    height(x->right)) + 1;  
+  
+    // Return new root  
     return x;  
 } 
 
@@ -51,12 +58,18 @@ Node *leftRotate(Node *x)
 {  
     Node *y = x->right;  
     Node *T2 = y->left;  
-   
+  
+    // Perform rotation  
     y->left = x;  
     x->right = T2;  
   
-    x->height = max(height(x->left), height(x->right)) + 1;  
-    y->height = max(height(y->left), height(y->right)) + 1;  
+    // Update heights  
+    x->height = max(height(x->left),     
+                    height(x->right)) + 1;  
+    y->height = max(height(y->left),  
+                    height(y->right)) + 1;  
+  
+    // Return new root  
     return y;  
 }  
 
@@ -74,41 +87,53 @@ Node* insert(Node* node, int key)
         return node;  
   
     
-    node->height = 1 + max(height(node->left), height(node->right));  
+    node->height = 1 + max(height(node->left),  
+                        height(node->right));  
   
     int balance = getBalance(node);  
-
+  
+    // Left Left Case  
     if (balance > 1 && key < node->left->key)  
         return rightRotate(node);  
+  
+    // Right Right Case  
     if (balance < -1 && key > node->right->key)  
         return leftRotate(node);  
   
+    // Left Right Case  
     if (balance > 1 && key > node->left->key)  
     {  
         node->left = leftRotate(node->left);  
         return rightRotate(node);  
     }  
   
+    // Right Left Case  
     if (balance < -1 && key < node->right->key)  
     {  
         node->right = rightRotate(node->right);  
         return leftRotate(node);  
     }  
   
+    /* return the (unchanged) node pointer */
     return node;  
 }  
 
-void preOrder(Node *root)  
+void preorder(Node *root)  
 {  
     if(root != NULL)  
     {  
         cout << root->key << " ";  
-        preOrder(root->left);  
-        preOrder(root->right);  
+        preorder(root->left);  
+        preorder(root->right);  
     }  
 }  
 
- 
+int getBalance(Node *N)  
+{  
+    if (N == NULL)  
+        return 0;  
+    return height(N->left) - height(N->right);  
+} 
 
 int main(){
     Node *root = NULL;
@@ -121,6 +146,6 @@ int main(){
         root = insert(root,temp);
     }
     cout<<"Preoder of tree is : ";
-    preOrder(root);
+    preorder(root);
     cout<<endl;
 }
