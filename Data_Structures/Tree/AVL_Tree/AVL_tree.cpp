@@ -17,6 +17,13 @@ int height(Node *N)
     return N->height;  
 }  
 
+int getBalance(Node *N)  
+{  
+    if (N == NULL)  
+        return 0;  
+    return height(N->left) - height(N->right);  
+}
+
 Node* newNode(int key)  
 {  
     Node* node = new Node(); 
@@ -111,13 +118,13 @@ Node* insert(Node* node, int key)
     return node;  
 }  
 
-void preOrder(Node *root)  
+void preorder(Node *root)  
 {  
     if(root != NULL)  
     {  
         cout << root->key << " ";  
-        preOrder(root->left);  
-        preOrder(root->right);  
+        preorder(root->left);  
+        preorder(root->right);  
     }  
 }  
 
@@ -130,7 +137,7 @@ int getBalance(Node *N)
 
 int main(){
     Node *root = NULL;
-    cout<<"Enter number of nodes to be entered: "
+    cout<<"Enter number of nodes to be entered: ";
     int n;
     cin>>n;
     for(int i=0; i<n; i++){
@@ -138,7 +145,7 @@ int main(){
         cin>>temp;
         root = insert(root,temp);
     }
-    cout<<"Preoder of tree is : "
+    cout<<"Preoder of tree is : ";
     preorder(root);
     cout<<endl;
 }
